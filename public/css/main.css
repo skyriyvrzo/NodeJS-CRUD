@@ -1,0 +1,9 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+
+    background-image: url('../images/bg4.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}

@@ -1,0 +1,30 @@
+.navbar {
+    font-weight: bold;
+}
+
+.navbar-nav .nav-item .nav-animation {
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.navbar-nav .nav-item .nav-animation::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-item .nav-animation:hover::after {
+    transform: scaleX(1);
+}
+
+.navbar-nav .nav-item .nav-animation:not(:hover)::after {
+    transform: scaleX(0);
+    transform-origin: right;
+}
