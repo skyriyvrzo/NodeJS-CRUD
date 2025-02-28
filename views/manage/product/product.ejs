@@ -12,23 +12,39 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th style="width: 8%">ID</th>
+                    <th style="width: 8%">No.</th>
                     <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Image</th>
+                    <th>Description</th>
                     <th class="text-center" style="width: 10%">Manage</th>
                 </tr>
             </thead>
-            <tbody id="category-list">
-                <tr>
-                    <td>A</td>
-                    <td>B</td>
-                    <td class="d-flex p-1">
-                        <a type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#delete-product">Delete</a>
-                        <form method="post" action="/manage/product/edit">
-                            <input type="hidden" name="id" value="">
-                            <button type="submit" class="btn btn-warning btn-sm m-1">Edit</button>
-                        </form>
-                    </td>
-                </tr>
+            <tbody id="product-list">
+            <% if(typeof products !== 'undefined') { %>
+                <% for(var i = 0; i < Object.values(products).length; i++) { %>
+                    <tr>
+                        <td class="align-content-center"><%= i + 1 %></td>
+                        <td class="align-content-center"><%= products[i].name %></td>
+                        <td class="align-content-center"><%= products[i].price %></td>
+                        <td class="align-content-center"><%= products[i].category ? products[i].category.name : "No Category" %></td>
+                        <td class="text-center">
+                            <a href="/images/products/<%= products[i].image%>" target="_blank"><img src="/images/products/<%= products[i].image %>" class="img-thumbnail" style="max-width: 40px; max-height: 40px; object-fit: cover;" alt="<%= products[i].name %>"></a>
+                        </td>
+
+                        <td class="align-content-center"><%= products[i].description %></td>
+                        <td class="d-flex p-1 mt-1">
+                            <form method="post" action="/manage/product/edit">
+                                <input type="hidden" name="id" value="<%= products[i]._id%>">
+                                <button type="submit" class="btn btn-warning btn-sm m-1">Edit</button>
+                            </form>
+
+                            <a href="/manage/product/delete/<%= products[i]._id%>" onclick="return confirm('Are you sure you want to delete this category?')" type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#delete-product">Delete</a>
+                        </td>
+                    </tr>
+                <% } %>
+            <% } %>
             </tbody>
         </table>
 

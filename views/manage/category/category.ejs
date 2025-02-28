@@ -13,7 +13,7 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th style="width: 8%">ID</th>
+                <th style="width: 8%">No.</th>
                 <th>Name</th>
                 <th class="text-center" style="width: 10%">Manage</th>
             </tr>
@@ -22,8 +22,8 @@
             <% if(typeof categories !== 'undefined') { %>
                 <% for(var i = 0; i < Object.values(categories).length; i++) { %>
                     <tr>
-                        <td><%= i + 1 %></td>
-                        <td><%= categories[i].name %></td>
+                        <td class="align-content-center"><%= i + 1 %></td>
+                        <td class="align-content-center"><%= categories[i].name %></td>
                         <td class="d-flex p-1">
                             <form method="post" action="/manage/category/edit">
                                 <input type="hidden" name="id" value="<%= categories[i]._id%>">

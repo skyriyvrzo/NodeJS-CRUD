@@ -1,31 +1,52 @@
+//============================================================================
+// Name        : router.swift
+// Author      : Thewa Laokasikan
+// Version     : 2025.2.28.3
+// Copyright   : MIT
+// Description : Main router
+//============================================================================
 const express = require('express');
 const r = express.Router();
-const file = require('../util/file')
 const Member = require('../models/members')
 const bcrypt = require("bcryptjs");
 const connect = require('../database/db')
+const multer = require('multer')
 
 const Category = require('../models/categorys')
+const Product = require('../models/products')
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/images/products') //file part
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + ".jpg") //auto filename
+    }
+})
+
+const upload = multer({
+    storage: storage
+})
 
 //========================== Main (Get) ==============================
 r.get('/', async (req, res) => {
-    const categories = await Category.find()
-    res.render('index', {user: req.session.user, categories});
+    const categories = await Category.find().exec()
+    const products = await Product.find().populate('category').exec()
+    console.log(products)
+    res.render('index', {user: req.session.user, categories, products});
 })
 //=====================================================================
 
 
-//========================== Register Login Logut (Get) ==============
+//========================== Register Login Logout (Get) ==============
 r.get('/login', (req, res) => {
     res.render('user/login' );
 })
-
 r.get("/logout", (req, res) => {
     req.session.destroy(() => {
         res.redirect("/login");
     });
 });
-
 r.get('/register', (req, res) => {
     res.render('user/register');
 })
@@ -52,11 +73,22 @@ r.get('/manage/category/delete/:id', async (req, res) => {
 
 
 //=========================== Product (Get) ===========================
-r.get('/manage/product', (req, res) => {
-    res.render('manage/product/product')
+r.get('/manage/product', async (req, res) => {
+    const products = await Product.find().populate('category').exec();
+    console.log(products[0])
+    res.render('manage/product/product', {products})
 })
-r.get('/manage/product/add', (req, res) => {
-    res.render('manage/product/add')
+r.get('/manage/product/add', async (req, res) => {
+    const cats = await Category.find()
+    res.render('manage/product/add', {categories: cats})
+})
+r.get('/manage/product/delete/:id', async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id, {useFindAndModify: false}).exec();
+        res.redirect('/manage/product');
+    } catch (error) {
+        res.status(500).json({message: "Server Error", error: error.message});
+    }
 })
 //=====================================================================
 
@@ -148,6 +180,56 @@ r.post('/manage/category/update', async (req, res) => {
         res.status(500).json({message: "Server Error", error: error.message});
     }
 })
+//=====================================================================
+
+//============================ Product (Post) =========================
+r.post('/manage/product/add', upload.single('productImage'), async (req, res) => {
+    const { productName, productPrice, productCategory, productDescription } = req.body;
+
+    if(await Product.findOne({productName})) {
+        return res.json({error: "Duplicated product name"})
+    }
+
+    const newProduct = new Product({
+        name: productName,
+        price: productPrice,
+        category: await Category.findOne({name: productCategory}),
+        image: req.file.filename,
+        description: productDescription
+    })
+    await newProduct.save()
+    res.redirect('/manage/product')
+})
+r.post('/manage/product/edit', async (req, res) => {
+    try {
+        const edit_id = req.body.id;
+        const target = await Product.findOne({_id: edit_id}).populate('category').exec();
+        const categories = await Category.find()
+        res.render('manage/product/edit', {target, categories});
+    } catch (error) {
+        res.status(500).json({message: "Server Error", error: error.message});
+    }
+})
+r.post('/manage/product/update', upload.single('productImage'), async (req, res) => {
+    try {
+        const id = req.body.id;
+        const data = {
+            name: req.body.productName,
+            price: req.body.productPrice,
+            category: await Category.findOne({name: req.body.productCategory}),
+            description: req.body.productDescription
+        };
+        if (req.file) {
+            data.image = req.file.filename;
+        }
+
+        await Product.findByIdAndUpdate(id, data, {useFindAndModify: false}).exec();
+        await res.redirect('/manage/product');
+
+    } catch (error) {
+        res.status(500).json({message: "Server Error", error: error.message});
+    }
+});
 //=====================================================================
 
 module.exports = r;

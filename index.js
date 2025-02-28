@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const route = require('./routes/route');
+const router = require('./routes/router');
 const session = require("express-session");
 
 const port = 80
@@ -16,7 +16,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(route)
+app.use(router)
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

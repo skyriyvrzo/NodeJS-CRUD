@@ -2,6 +2,24 @@
 <html lang="en">
 <head>
     <%- include('util/head.ejs', {title: "Home"})%>
+
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-center {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <%- include('util/navbar.ejs') %>
@@ -11,13 +29,13 @@
             <div class="col-md-8">
                 <form action="/search" method="GET" class="search-form">
                     <div class="row align-items-center">
-                        <div class="col-md-3">
-                            <input type="text" class="form-control" name="tagetName" placeholder="Name" min="0">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" name="tagetName" placeholder="Search  Products, Categories" min="0">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input type="number" class="form-control" name="min" placeholder="Min" min="0">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input type="number" class="form-control" name="max" placeholder="Max" min="0">
                         </div>
                         <div class="col-md-3 text-center">
@@ -28,8 +46,28 @@
             </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="container my-5">
+            <div class="row">
 
+                <% Object.values(products).forEach((p) => { %>
+
+                <!-- Product Card -->
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <img src="/images/products/<%= p.image %>" class="card-img-top" alt="<%= p.name %>">
+                            <div class="card-body" style="min-height: 110px;">
+                                <h5 class="card-title"><%= p.name %></h5>
+                                <p class="card-text small"><%= p.description %></p>
+                            </div>
+                            <div class="card-footer">
+                                <span class="text-success">฿<%= (p.price).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></span>
+                                <a href="#" class="btn btn-warning btn-center bg-transparent">🛒</a>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+
+            </div>
         </div>
     </div>
 
