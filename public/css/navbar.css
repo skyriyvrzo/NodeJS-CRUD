@@ -7,6 +7,10 @@
     padding-bottom: 5px;
 }
 
+.navbar-nav .nav-item .nav-sub-menu {
+    font-size: 14px;
+}
+
 .navbar-nav .nav-item .nav-animation::after {
     content: "";
     position: absolute;

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../../util/head', {title: "Manage Product"})%>
+</head>
+<body>
+    <%- include('../../util/navbar')%>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4" style="font-weight: bold">PRODUCTS LIST</h2>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 8%">ID</th>
+                    <th>Name</th>
+                    <th class="text-center" style="width: 10%">Manage</th>
+                </tr>
+            </thead>
+            <tbody id="category-list">
+                <tr>
+                    <td>A</td>
+                    <td>B</td>
+                    <td class="d-flex p-1">
+                        <a type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#delete-product">Delete</a>
+                        <form method="post" action="/manage/product/edit">
+                            <input type="hidden" name="id" value="">
+                            <button type="submit" class="btn btn-warning btn-sm m-1">Edit</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <a href="/manage/product/add" class="btn btn-success">New Product</a>
+        </div>
+    </div>
+
+    <%- include('../../util/footer')%>
+</body>
+</html>

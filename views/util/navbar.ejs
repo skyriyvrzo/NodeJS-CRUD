@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="\css/navbar.css">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container mt-1 mb-1">
@@ -13,10 +13,10 @@
                 </li>
                 <li class="nav-item dropdown me-3">
                     <a class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">PRODUCTS</a>
-                    <% if(typeof category !== "undefined") { %>
+                    <% if(typeof categories !== "undefined") { %>
                         <ul class="dropdown-menu dropdown-menu-dark">
-                            <% Object.values(category).forEach(function(c){ %>
-                                <li><a class="dropdown-item nav-animation" href="/">c.name</a></li>
+                            <% Object.values(categories).forEach(function(c){ %>
+                                <li><a class="dropdown-item nav-animation nav-sub-menu" href="/"><%= c.name %></a></li>
                             <% }) %>
                         </ul>
                     <% } %>
@@ -24,8 +24,8 @@
                 <li class="nav-item dropdown me-3">
                     <a class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">MANAGE</a>
                     <ul class="dropdown-menu dropdown-menu-dark">
-                        <li><a class="dropdown-item nav-animation" href="/manage/product">Product</a></li>
-                        <li><a class="dropdown-item nav-animation" href="/manage/category">Category</a></li>
+                        <li><a class="dropdown-item nav-animation nav-sub-menu" href="/manage/product">Product</a></li>
+                        <li><a class="dropdown-item nav-animation nav-sub-menu" href="/manage/category">Category</a></li>
                     </ul>
                 </li>
                 <li class="nav-item me-3">

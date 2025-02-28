@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <%- include('../../util/head', {title: "Add Category"})%>
+</head>
+<body class="bg-light">
+<%- include('../../util/navbar')%>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Create a new Category</h2>
+
+    <div class="card shadow p-4">
+        <form action="/manage/category/update" method="POST">
+            <div class="mb-3">
+                <label for="categoryName" class="form-label">Category Name</label>
+                <input type="text" class="form-control" id="categoryName" name="categoryName" value="<%= target.name%>" placeholder="Name..." required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Update</button>
+        </form>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="/manage/category" class="btn btn-link text-decoration-none">Back</a>
+    </div>
+</div>
+
+<%- include('../../util/footer')%>
+</body>
+</html>

@@ -5,7 +5,6 @@ let productSchema = new mongoose.Schema({
     price:Number,
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     image:String,
-    stock: Number,
     description:String
 
 })
