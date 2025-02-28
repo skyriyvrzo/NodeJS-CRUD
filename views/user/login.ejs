@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <%- include('../util/head', {title: "Login"})%>
+</head>
+<body class="bg-light">
+
+<%- include('../util/navbar')%>
+
+<div class="container d-flex justify-content-center align-items-center" style="margin-top: 120px;">
+    <div class="card shadow p-4" style="width: 350px;">
+        <h3 class="text-center mb-3">Login</h3>
+        <% if (typeof message !== 'undefined') { %>
+            <div class="alert alert-danger p-1 fs-6">
+                <small><%= message %></small>
+            </div>
+        <% } %>
+        <form method="post" action="/login">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" placeholder="example@email.com" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+<!--                <div class="form-check">-->
+<!--                    <input type="checkbox" class="form-check-input" id="rememberMe">-->
+<!--                    <label class="form-check-label" for="rememberMe">จดจำฉัน</label>-->
+<!--                </div>-->
+<!--                <a href="#" class="text-decoration-none">ลืมรหัสผ่าน?</a>-->
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Log in</button>
+        </form>
+
+        <p class="text-center mt-3">Don't have an account? <a href="/register" class="text-decoration-none">Signup</a></p>
+    </div>
+</div>
+
+<%- include('../util/footer')%>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
