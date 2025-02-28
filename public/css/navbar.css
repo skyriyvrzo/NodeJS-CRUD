@@ -3,13 +3,17 @@
     font-weight: normal;
 }
 
+.nav-link {
+    color: white;
+}
+
 .navbar-nav .nav-item .nav-animation {
     position: relative;
     padding-bottom: 5px;
 }
 
 .navbar-nav .nav-item .nav-sub-menu {
-    /*color: white;*/
+    color: white;
     font-size: 14px;
 }
 

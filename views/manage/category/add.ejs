@@ -3,14 +3,14 @@
 <head>
     <%- include('../../util/head', {title: "Add Category"})%>
 </head>
-<body class="bg-light">
+<body>
 <%- include('../../util/navbar')%>
-<div class="container mt-5">
+<div class="container mt-5 text-white">
     <h2 class="text-center mb-4">Create a new Category</h2>
 
-    <div class="card shadow p-4">
+    <div class="card shadow p-4" style="background: #1f2937">
         <form action="/manage/category/add" method="POST">
-            <div class="mb-3">
+            <div class="mb-3 text-white">
                 <label for="categoryName" class="form-label">Category Name</label>
                 <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Name..." required>
             </div>
