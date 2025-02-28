@@ -1,5 +1,6 @@
 .navbar {
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: normal;
 }
 
 .navbar-nav .nav-item .nav-animation {
@@ -8,7 +9,16 @@
 }
 
 .navbar-nav .nav-item .nav-sub-menu {
+    /*color: white;*/
     font-size: 14px;
+}
+
+.nav-default:hover {
+    color: #3e8dff;
+}
+
+.nav-experimental:hover {
+    color: #ef4444;
 }
 
 .navbar-nav .nav-item .nav-animation::after {
@@ -18,7 +28,7 @@
     bottom: 0;
     width: 100%;
     height: 1px;
-    background-color: white;
+    background-color: cornflowerblue;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease-in-out;

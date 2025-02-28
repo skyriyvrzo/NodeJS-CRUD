@@ -53,14 +53,14 @@
 
                 <!-- Product Card -->
                     <div class="col-md-3 mb-4">
-                        <div class="card">
+                        <div class="card text-white shadow-lg" style="background: #1f2937; border : solid 2px #111827">
                             <img src="/images/products/<%= p.image %>" class="card-img-top" alt="<%= p.name %>">
                             <div class="card-body" style="min-height: 110px;">
                                 <h5 class="card-title"><%= p.name %></h5>
                                 <p class="card-text small"><%= p.description %></p>
                             </div>
-                            <div class="card-footer">
-                                <span class="text-success">฿<%= (p.price).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></span>
+                            <div class="card-footer" style="background:#111827;">
+                                <span class="text-primary">฿<%= (p.price).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></span>
                                 <a href="#" class="btn btn-warning btn-center bg-transparent">🛒</a>
                             </div>
                         </div>

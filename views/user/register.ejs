@@ -3,13 +3,13 @@
 <head>
     <%- include('../util/head', {title: "Sign up"})%>
 </head>
-<body class="bg-light">
-
+<!--<body class="bg-light">-->
+<body>
 <%- include('../util/navbar')%>
 
 <div class="container d-flex justify-content-center align-items-center" style="margin-top: 4%">
 
-    <div class="card shadow p-4" style="width: 400px;">
+    <div class="card shadow p-4 bg-dark text-white" style="width: 400px;">
         <h3 class="text-center mb-3">Create a new account</h3>
         <% if (typeof error !== "undefined" ) { %>
             <div class="alert alert-danger p-1 fs-6">
@@ -37,7 +37,7 @@
                 <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="********" required>
             </div>
 
-            <button type="submit" class="btn btn-success w-100">Sign up</button>
+            <button type="submit" class="btn btn-primary w-100">Sign up</button>
         </form>
 
         <p class="text-center mt-3">Already have an account? <a href="/login" class="text-decoration-none">Login</a></p>

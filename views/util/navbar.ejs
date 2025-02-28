@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="\css/navbar.css">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
     <div class="container mt-1 mb-1">
         <a class="navbar-brand" href="/"><%= typeof user !== 'undefined' ? 'Welcome: ' + user.username :  'Welcome' %></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -8,41 +8,50 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+
                 <li class="nav-item me-3">
-                    <a class="nav-link nav-animation" href="/">HOME</a>
+                    <a class="nav-link nav-animation nav-default" href="/">Home</a>
                 </li>
+
+                <li class="nav-item me-3">
+                    <a class="nav-link nav-animation nav-default" href="https://www.github.com/skyriyvrzo" target="_blank">Github<i class="bi bi-box-arrow-up-right ms-2"></i></a>
+                </li>
+
                 <li class="nav-item dropdown me-3">
-                    <a class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">PRODUCTS</a>
+                    <a class="nav-link dropdown-toggle nav-default " href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Products</a>
                     <% if(typeof categories !== "undefined") { %>
-                        <ul class="dropdown-menu dropdown-menu-dark">
+                        <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a">
                             <% Object.values(categories).forEach(function(c){ %>
-                                <li><a class="dropdown-item nav-animation nav-sub-menu" href="/"><%= c.name %></a></li>
+                                <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/"><%= c.name %></a></li>
                             <% }) %>
                         </ul>
                     <% } %>
                 </li>
+
                 <li class="nav-item dropdown me-3">
-                    <a class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">MANAGE</a>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                        <li><a class="dropdown-item nav-animation nav-sub-menu" href="/manage/product">Product</a></li>
-                        <li><a class="dropdown-item nav-animation nav-sub-menu" href="/manage/category">Category</a></li>
+                    <a class="nav-link dropdown-toggle nav-default " href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Manage</a>
+                    <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a">
+                        <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/manage/product">Product</a></li>
+                        <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/manage/category">Category</a></li>
                     </ul>
                 </li>
+
                 <li class="nav-item dropdown me-3">
                     <% if(typeof user === "undefined") { %>
-                        <a class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">LOGIN</a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="nav-link nav-animation nav-sub-menu" href="/login">Login</a></li>
-                            <li><a class="nav-link nav-animation nav-sub-menu" href="/register">Register</a></li>
+                        <a class="nav-link dropdown-toggle nav-default " href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Login</a>
+                        <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a">
+                            <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/login">Login</a></li>
+                            <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/register">Register</a></li>
                         </ul>
                     <% } else { %>
-                            <a class="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">ACCOUNT</a>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="nav-link nav-animation nav-sub-menu" href="/account">Account</a></li>
-                                <li><a class="nav-link nav-animation nav-sub-menu" href="/logout">Logout</a></li>
+                            <a class="nav-link dropdown-toggle nav-default " href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Account</a>
+                            <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a">
+                                <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/account">Account</a></li>
+                                <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-experimental" href="/logout">Logout</a></li>
                             </ul>
                     <% } %>
                 </li>
+
             </ul>
         </div>
     </div>
