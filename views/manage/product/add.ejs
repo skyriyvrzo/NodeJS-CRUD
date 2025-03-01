@@ -6,9 +6,9 @@
 <body>
 <%- include('../../util/navbar')%>
 <div class="container mt-5 text-white">
-    <h2 class="text-center mb-4">Create a new Product</h2>
+    <h2 class="text-center mb-4 fw-bold fst-normal">Create a new Product</h2>
 
-    <div class="card shadow p-4" style="background: #1f2937">
+    <div class="card shadow p-4 bg-dark text-white">
         <form action="/manage/product/add" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="productName" class="form-label">Name</label>
@@ -40,12 +40,12 @@
                 <input type="text" class="form-control" id="productDescription" name="productDescription" placeholder="Description..." required>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Add Product</button>
+            <button type="submit" class="btn btn-primary w-100 box-shadow-primary">Add Product</button>
         </form>
     </div>
 
     <div class="mt-4 text-center">
-        <a href="/manage/product" class="btn btn-link text-decoration-none">Back</a>
+        <a href="/manage/product" class="btn btn-outline-primary box-shadow-primary text-decoration-none">Back</a>
     </div>
 </div>
 

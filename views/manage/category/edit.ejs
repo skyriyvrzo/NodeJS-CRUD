@@ -6,20 +6,20 @@
 <body>
 <%- include('../../util/navbar')%>
 <div class="container mt-5 text-white">
-    <h2 class="text-center mb-4">Editing "<%= target.name %>" </h2>
+    <h2 class="text-center mb-4 fw-bold fst-normal">Editing <span style="color: #2563eb"><%= target.name %></span></h2>
 
-    <div class="card shadow p-4" style="background: #1f2937">
+    <div class="card shadow p-4 bg-dark text-white">
         <form action="/manage/category/update" method="POST">
             <div class="mb-3">
                 <label for="categoryName" class="form-label">Category Name</label>
                 <input type="text" class="form-control" id="categoryName" name="categoryName" value="<%= target.name%>" placeholder="Name..." required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Update</button>
+            <button type="submit" class="btn btn-primary w-100 box-shadow-primary">Update</button>
         </form>
     </div>
 
     <div class="mt-4 text-center">
-        <a href="/manage/category" class="btn btn-link text-decoration-none">Back</a>
+        <a href="/manage/category" class="btn btn-outline-primary box-shadow-primary text-decoration-none">Back</a>
     </div>
 </div>
 

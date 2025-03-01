@@ -8,18 +8,18 @@
 <div class="container mt-5 text-white">
     <h2 class="text-center mb-4">Create a new Category</h2>
 
-    <div class="card shadow p-4" style="background: #1f2937">
+    <div class="card shadow p-4 bg-dark text-white">
         <form action="/manage/category/add" method="POST">
             <div class="mb-3 text-white">
                 <label for="categoryName" class="form-label">Category Name</label>
                 <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Name..." required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Add Category</button>
+            <button type="submit" class="btn btn-primary w-100 box-shadow-primary">Add Category</button>
         </form>
     </div>
 
     <div class="mt-4 text-center">
-        <a href="/manage/category" class="btn btn-link text-decoration-none">Back</a>
+        <a href="/manage/category" class="btn btn-outline-primary box-shadow-primary text-decoration-none">Back</a>
     </div>
 </div>
 

@@ -9,7 +9,11 @@
     <div class="container mt-5 text-white">
         <h2 class="text-center mb-4" style="font-weight: bold">CATEGORIES LIST</h2>
 
-        <table class="table table-bordered table-dark table-hover">
+        <div class="text-end mb-2">
+            <a href="/manage/category/add" class="btn btn-outline-success box-shadow-success">New Category</a>
+        </div>
+
+        <table class="table table-bordered table-dark table-hover table-striped">
             <thead>
             <tr>
                 <th style="width: 8%">No.</th>
@@ -26,20 +30,16 @@
                         <td class="d-flex p-1">
                             <form method="post" action="/manage/category/edit">
                                 <input type="hidden" name="id" value="<%= categories[i]._id%>">
-                                <button type="submit" class="btn btn-warning btn-sm m-1">Edit</button>
+                                <button type="submit" class="btn btn-warning btn-sm m-1 box-shadow-warning">Edit</button>
                             </form>
 
-                            <a href="/manage/category/delete/<%= categories[i]._id%>" onclick="return confirm('Are you sure you want to delete this category?')" type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#delete-product">Delete</a>
+                            <a href="/manage/category/delete/<%= categories[i]._id%>" onclick="return confirm('Are you sure you want to delete this category?')" type="button" class="btn btn-danger btn-sm m-1 box-shadow-danger" data-toggle="modal" data-target="#delete-product">Delete</a>
                         </td>
                     </tr>
                 <% } %>
             <% } %>
             </tbody>
         </table>
-
-        <div class="text-center">
-            <a href="/manage/category/add" class="btn btn-success">New Category</a>
-        </div>
     </div>
 
 

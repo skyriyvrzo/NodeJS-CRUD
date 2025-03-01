@@ -10,3 +10,19 @@ body {
     /*background-repeat: no-repeat;*/
     /*height: 100vh;*/
 }
+
+.box-shadow-primary:hover {
+    box-shadow: 1px 1px 10px rgb(0, 52, 186);
+}
+
+.box-shadow-success:hover {
+    box-shadow: 1px 1px 10px rgb(12, 104, 0);
+}
+
+.box-shadow-warning:hover {
+    box-shadow: 1px 1px 10px rgb(158, 154, 0);
+}
+
+.box-shadow-danger:hover {
+    box-shadow: 1px 1px 10px rgb(255, 58, 58);
+}
