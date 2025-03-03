@@ -46,7 +46,8 @@ r.get('/chrome-dino', (req, res) => {
 
 //================== Register Login Logout Account (Get) ==============
 r.get('/login', (req, res) => {
-    if(req.session.login) return res.redirect(req.get('Referer') || '/');
+
+    if(req.session.login !== undefined && req.session.login) return res.redirect('/')
     res.render('user/login' );
 })
 r.get("/logout", (req, res) => {
@@ -102,8 +103,7 @@ r.get('/products/:target', async (req, res) => {
     res.render('product/productsList', {products, user: req.session.user, categories: await Category.find()})
 })
 r.get('/manage/product', async (req, res) => {
-    isLogin(req, res)
-
+    console.log(isLogin(req, res))
     const products = await Product.find().populate('category').exec();
     res.render('manage/product/product', {products})
 })
@@ -311,9 +311,11 @@ r.post('/manage/product/update', upload.single('productImage'), async (req, res)
  * @returns false -> return true if login
  */
 function isLogin(req, res) {
-    console.log(req.session.login != null)
-    console.log(!req.session.login)
-    return req.session.login !== null && !req.session.login ? res.redirect('/login') : true
+    // console.log(req.session.login != null)
+    // console.log(!req.session.login)
+
+
+    return !req.session.login ? res.redirect('/login') : true
 }
 
 module.exports = r;
