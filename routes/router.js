@@ -1,7 +1,7 @@
 //============================================================================
-// Name        : router.swift
+// Name        : router.js
 // Author      : Thewa Laokasikan
-// Version     : 2025.2.28.3
+// Version     : 2025.3.3.3
 // Copyright   : MIT
 // Description : Main router
 //============================================================================
@@ -11,6 +11,7 @@ const Member = require('../models/members')
 const bcrypt = require("bcryptjs");
 const connect = require('../database/db')
 const multer = require('multer')
+const Common = require('../utils/Common');
 
 const Category = require('../models/categorys')
 const Product = require('../models/products')
@@ -30,7 +31,7 @@ const upload = multer({
 
 //========================== Main (Get) ==============================
 r.get('/', async (req, res) => {
-    const categories = await Category.find().exec()
+    const categories = await Common.getCategories()
     const products = await Product.find().populate('category').exec()
     res.render('index', {user: req.session.user, categories, products});
 })
@@ -39,7 +40,7 @@ r.get('/', async (req, res) => {
 
 //========================== Chrome-Dino (Get) ========================
 r.get('/chrome-dino', (req, res) => {
-    res.render('chrome-dino')
+    res.render('chrome-dino', {user: req.session.user})
 })
 //=====================================================================
 
@@ -47,8 +48,8 @@ r.get('/chrome-dino', (req, res) => {
 //================== Register Login Logout Account (Get) ==============
 r.get('/login', (req, res) => {
 
-    if(req.session.login !== undefined && req.session.login) return res.redirect('/')
-    res.render('user/login' );
+    if(req.session.login) return res.redirect(req.get('Referer') || '/')
+    res.render('user/login', {user: req.session.user});
 })
 r.get("/logout", (req, res) => {
     req.session.destroy(() => {
@@ -57,7 +58,7 @@ r.get("/logout", (req, res) => {
 });
 r.get('/register', (req, res) => {
     if(req.session.login) return res.redirect(req.get('Referer') || '/');
-    res.render('user/register');
+    res.render('user/register', {user: req.session.user});
 })
 r.get('/account', (req, res) => {
     res.render('user/account/account', {user: req.session.user})
@@ -72,22 +73,22 @@ r.get('/account/change/:target',  (req, res) => {
 
 //=========================== Category (Get) ==========================
 r.get('/manage/category', async (req, res) => {
-    isLogin(req, res)
+    if (!Common.isLogin(req, res)) return;
 
-    const categories = await Category.find()
-    res.render('manage/category/category', {categories})
+    const categories = await Common.getCategories()
+    res.render('manage/category/category', {categories, user: req.session.user})
 })
 r.get('/manage/category/add', (req, res) => {
-    isLogin(req, res)
+    if (!Common.isLogin(req, res)) return;
 
-    res.render('manage/category/add');
+    res.render('manage/category/add', {user: req.session.user});
 })
 r.get('/manage/category/delete/:id', async (req, res) => {
-    isLogin(req, res)
+    if (!Common.isLogin(req, res)) return;
 
     try {
         await Category.findByIdAndDelete(req.params.id, {useFindAndModify: false}).exec();
-        res.redirect('/manage/category');
+        res.redirect('/manage/category', {user: req.session.user});
     } catch (error) {
         res.status(500).json({message: "Server Error", error: error.message});
     }
@@ -97,28 +98,28 @@ r.get('/manage/category/delete/:id', async (req, res) => {
 
 //=========================== Product (Get) ===========================
 r.get('/products/:target', async (req, res) => {
-    const cateTarget = await Category.find({name: req.params.target})
+    const cateTarget = await Category.findOne({name: req.params.target})
     const products = await Product.find({category: cateTarget})
-
-    res.render('product/productsList', {products, user: req.session.user, categories: await Category.find()})
+    res.render('product/productsList', {products, user: req.session.user, categories: await Common.getCategories(), target: cateTarget.name})
 })
 r.get('/manage/product', async (req, res) => {
-    console.log(isLogin(req, res))
+    if (!Common.isLogin(req, res)) return;
+
     const products = await Product.find().populate('category').exec();
-    res.render('manage/product/product', {products})
+    res.render('manage/product/product', {products, categories: await Common.getCategories(), user: req.session.user})
 })
 r.get('/manage/product/add', async (req, res) => {
-    isLogin(req, res)
+    if (!Common.isLogin(req, res)) return;
 
-    const cats = await Category.find()
-    res.render('manage/product/add', {categories: cats})
+    const cats = await Common.getCategories()
+    res.render('manage/product/add', {categories: cats, user: req.session.user})
 })
 r.get('/manage/product/delete/:id', async (req, res) => {
-    isLogin(req, res)
+    if (!Common.isLogin(req, res)) return;
 
     try {
         await Product.findByIdAndDelete(req.params.id, {useFindAndModify: false}).exec();
-        res.redirect('/manage/product');
+        res.redirect('/manage/product', {user: req.session.user});
     } catch (error) {
         res.status(500).json({message: "Server Error", error: error.message});
     }
@@ -172,7 +173,7 @@ r.post('/register', async (req, res) => {
     }
 })
 r.post('/update-profile', async (req, res) => {
-    isLogin(req, res)
+    if (!Common.isLogin(req, res)) return;
 
     const id = req.body.id
     let whatChange = req.body.whatChange
@@ -226,10 +227,12 @@ r.post('/manage/category/add', async (req, res) => {
     res.redirect('/manage/category')
 })
 r.post('/manage/category/edit', async (req, res) => {
+    if (!Common.isLogin(req, res)) return;
+
     try {
         const edit_id = req.body.id;
         const cat = await Category.findOne({_id: edit_id}).exec();
-        res.render('manage/category/edit', {target: cat});
+        res.render('manage/category/edit', {target: cat, user: req.session.user});
 
     } catch (error) {
         res.status(500).json({message: "Server Error", error: error.message});
@@ -272,11 +275,13 @@ r.post('/manage/product/add', upload.single('productImage'), async (req, res) =>
     res.redirect('/manage/product')
 })
 r.post('/manage/product/edit', async (req, res) => {
+    if (!Common.isLogin(req, res)) return;
+
     try {
         const edit_id = req.body.id;
         const target = await Product.findOne({_id: edit_id}).populate('category').exec();
-        const categories = await Category.find()
-        res.render('manage/product/edit', {target, categories});
+        const categories = await Common.getCategories()
+        res.render('manage/product/edit', {target, categories, user: req.session.user});
     } catch (error) {
         res.status(500).json({message: "Server Error", error: error.message});
     }
@@ -302,20 +307,5 @@ r.post('/manage/product/update', upload.single('productImage'), async (req, res)
     }
 });
 //=====================================================================
-
-/**
- *
- * @param req
- * @param res
- * @returns true -> redirect to login page if not login
- * @returns false -> return true if login
- */
-function isLogin(req, res) {
-    // console.log(req.session.login != null)
-    // console.log(!req.session.login)
-
-
-    return !req.session.login ? res.redirect('/login') : true
-}
 
 module.exports = r;
