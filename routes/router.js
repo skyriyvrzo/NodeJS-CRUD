@@ -32,10 +32,10 @@ const upload = multer({
 r.get('/', async (req, res) => {
     const categories = await Category.find().exec()
     const products = await Product.find().populate('category').exec()
-    console.log(products)
     res.render('index', {user: req.session.user, categories, products});
 })
 //=====================================================================
+
 
 //========================== Chrome-Dino (Get) ========================
 r.get('/chrome-dino', (req, res) => {
@@ -44,8 +44,9 @@ r.get('/chrome-dino', (req, res) => {
 //=====================================================================
 
 
-//========================== Register Login Logout (Get) ==============
+//================== Register Login Logout Account (Get) ==============
 r.get('/login', (req, res) => {
+    if(req.session.login) return res.redirect(req.get('Referer') || '/');
     res.render('user/login' );
 })
 r.get("/logout", (req, res) => {
@@ -54,20 +55,35 @@ r.get("/logout", (req, res) => {
     });
 });
 r.get('/register', (req, res) => {
+    if(req.session.login) return res.redirect(req.get('Referer') || '/');
     res.render('user/register');
+})
+r.get('/account', (req, res) => {
+    res.render('user/account/account', {user: req.session.user})
+})
+r.get('/account/change/:target',  (req, res) => {
+    const target = req.params.target.substring(0, 1).toUpperCase() + req.params.target.substring(1)
+    const userTarget = req.session.user
+    return target !== 'Password' ? res.render('user/account/change-info', {target, userTarget, user: req.session.user}) : res.render('user/account/change-password', {target, userTarget, user: req.session.user})
 })
 //=====================================================================
 
 
 //=========================== Category (Get) ==========================
 r.get('/manage/category', async (req, res) => {
+    isLogin(req, res)
+
     const categories = await Category.find()
     res.render('manage/category/category', {categories})
 })
 r.get('/manage/category/add', (req, res) => {
+    isLogin(req, res)
+
     res.render('manage/category/add');
 })
 r.get('/manage/category/delete/:id', async (req, res) => {
+    isLogin(req, res)
+
     try {
         await Category.findByIdAndDelete(req.params.id, {useFindAndModify: false}).exec();
         res.redirect('/manage/category');
@@ -79,16 +95,27 @@ r.get('/manage/category/delete/:id', async (req, res) => {
 
 
 //=========================== Product (Get) ===========================
+r.get('/products/:target', async (req, res) => {
+    const cateTarget = await Category.find({name: req.params.target})
+    const products = await Product.find({category: cateTarget})
+
+    res.render('product/productsList', {products, user: req.session.user, categories: await Category.find()})
+})
 r.get('/manage/product', async (req, res) => {
+    isLogin(req, res)
+
     const products = await Product.find().populate('category').exec();
-    console.log(products[0])
     res.render('manage/product/product', {products})
 })
 r.get('/manage/product/add', async (req, res) => {
+    isLogin(req, res)
+
     const cats = await Category.find()
     res.render('manage/product/add', {categories: cats})
 })
 r.get('/manage/product/delete/:id', async (req, res) => {
+    isLogin(req, res)
+
     try {
         await Product.findByIdAndDelete(req.params.id, {useFindAndModify: false}).exec();
         res.redirect('/manage/product');
@@ -99,7 +126,7 @@ r.get('/manage/product/delete/:id', async (req, res) => {
 //=====================================================================
 
 
-//=========================== Register Login (Post) ===================
+//=================== Register Login Account (Post) ===================
 r.post("/login", async (req, res) => {
     const {email, password} = req.body;
     const user = await Member.findOne({email});
@@ -111,7 +138,7 @@ r.post("/login", async (req, res) => {
 
     req.session.user = user;
     req.session.login = true;
-    req.session.cookie.maxAge = 60000 * 5;
+    req.session.cookie.maxAge = 60000 * 30;
     res.redirect("/");
 });
 r.post('/register', async (req, res) => {
@@ -144,6 +171,42 @@ r.post('/register', async (req, res) => {
         res.render('user/register', {error: 'Error registering user because: ', e})
     }
 })
+r.post('/update-profile', async (req, res) => {
+    isLogin(req, res)
+
+    const id = req.body.id
+    let whatChange = req.body.whatChange
+    const type = req.body.type
+
+    if(type === 'username') {
+        const target = await Member.findOne({username: whatChange})
+        if(target && target.username === whatChange) return res.json({error: "Duplicated username"})
+    }
+
+    if(type == 'email') {
+        const target = await Member.findOne({email: whatChange})
+        if(target && target.email === whatChange) return res.json({error: "Duplicated email"})
+    }
+
+    if(type == 'password') {
+        const newPass = req.body.newPassword
+        const confirmNewPass = req.body.confirmNewPassword
+
+        if(newPass !== confirmNewPass) return res.json({error: "Password does not match"})
+        const hashedPassword = await bcrypt.hash(newPass, 10)
+        whatChange = hashedPassword
+
+    }
+
+    const data = {
+        [type] : whatChange
+    }
+
+    await Member.findByIdAndUpdate(id, data, {useFindAndModify: false}).exec();
+    req.session.user = await Member.findOne({_id: id}).exec();
+
+    res.redirect('/account')
+})
 //=====================================================================
 
 
@@ -173,6 +236,7 @@ r.post('/manage/category/edit', async (req, res) => {
     }
 })
 r.post('/manage/category/update', async (req, res) => {
+    console.log(req.body)
     try {
         const name = req.body.categoryName
         const id = req.body.id
@@ -187,6 +251,7 @@ r.post('/manage/category/update', async (req, res) => {
     }
 })
 //=====================================================================
+
 
 //============================ Product (Post) =========================
 r.post('/manage/product/add', upload.single('productImage'), async (req, res) => {
@@ -237,5 +302,18 @@ r.post('/manage/product/update', upload.single('productImage'), async (req, res)
     }
 });
 //=====================================================================
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns true -> redirect to login page if not login
+ * @returns false -> return true if login
+ */
+function isLogin(req, res) {
+    console.log(req.session.login != null)
+    console.log(!req.session.login)
+    return req.session.login !== null && !req.session.login ? res.redirect('/login') : true
+}
 
 module.exports = r;

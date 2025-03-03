@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
     <div class="container mt-1 mb-1">
-        <a class="navbar-brand" href="/chrome-dino">Welcome <span style="color: #ef4444"><%= typeof user !== 'undefined' ? user.username :  '' %></span></a>
+        <a class="navbar-brand" href="/">Welcome <span style="color: #ef4444"><%= typeof user !== 'undefined' ? user.username :  '' %></span></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -22,7 +22,7 @@
                     <% if(typeof categories !== "undefined") { %>
                         <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a">
                             <% Object.values(categories).forEach(function(c){ %>
-                                <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/"><%= c.name %></a></li>
+                                <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/products/<%= c.name %>"><%= c.name %></a></li>
                             <% }) %>
                         </ul>
                     <% } %>
@@ -39,12 +39,12 @@
                 <li class="nav-item dropdown me-3">
                     <% if(typeof user === "undefined") { %>
                         <a class="nav-link dropdown-toggle nav-default " href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Login</a>
-                        <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a">
+                        <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a;">
                             <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/login">Login</a></li>
                             <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/register">Register</a></li>
                         </ul>
                     <% } else { %>
-                            <a class="nav-link dropdown-toggle nav-default " href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Account</a>
+                            <a class="nav-link dropdown-toggle nav-default "href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown">Account</a>
                             <ul class="dropdown-menu dropdown-menu-dark" style="background: #111111; border: solid 0.1rem #0b2b5a">
                                 <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-default" href="/account">Account</a></li>
                                 <li><a class="nav-link dropdown-item nav-animation nav-sub-menu nav-experimental" href="/logout">Logout</a></li>
@@ -52,6 +52,7 @@
                     <% } %>
                 </li>
 
+                <li class="nav-item me-3"></li>
             </ul>
         </div>
     </div>

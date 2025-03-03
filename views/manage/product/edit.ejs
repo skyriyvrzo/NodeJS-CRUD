@@ -25,12 +25,16 @@
             <div class="mb-3">
                 <label for="productCategory" class="form-label">Category</label>
                 <select class="form-select" id="productCategory" name="productCategory" required>
-                    <option value="<%= target.category.name %>" selected><%= target.category.name %></option>
-                    <% Object.values(categories).forEach(function(c){ %>
-                        <% if (c.name !== target.category.name) { %>
-                            <option value="<%= c.name%>"><%= c.name %></option>
-                        <% } %>
-                    <% }) %>
+                    <% if(target.category !== null) { %>
+                        <option value="<%= target.category.name %>" selected><%= target.category.name %></option>
+                        <% Object.values(categories).forEach(function(c){ %>
+                            <% if (c.name !== target.category.name) { %>
+                                <option value="<%= c.name%>"><%= c.name %></option>
+                            <% } %>
+                        <% }) %>
+                    <% } else { %>
+                        <option disabled selected>NullPointerException</option>
+                    <% } %>
                 </select>
             </div>
 

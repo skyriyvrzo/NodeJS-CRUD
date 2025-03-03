@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../../util/head', {title: "Account"})%>
+
+    <style>
+        .block {
+            background: #3d444b
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('../../util/navbar')%>
+    <div class="container card d-grid justify-content-center align-items-center mt-3 p-4 bg-dark" style="max-width: 700px;">
+        <h3 class="text-center text-white fw-bold mb-3">Personal info</h3>
+
+        <div class="card shadow p-4 m-3 text-white block" style="width: 600px;">
+            <h4 class="text-center text-white fw-semibold mb-3">Basic info</h4>
+
+            <div class="d-flex justify-content-between align-items-center m-3">
+                <span>Username: <%= user.username %></span>
+                <a href="account/change/username"> <i class="bi bi-caret-right"></i> </a>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center m-3">
+                <a href="account/change/password" class="text-white text-decoration-none">Change Password</a>
+                <a href="account/change/password"> <i class="bi bi-caret-right"></i> </a>
+            </div>
+        </div>
+
+        <div class="card shadow p-4 m-3 text-white block">
+            <h4 class="text-center text-white fw-semibold mb-3">Contact info</h4>
+
+            <div class="d-flex justify-content-between align-items-center m-3">
+                <span>Email: <%= user.email %></span>
+                <a href="account/change/email"> <i class="bi bi-caret-right"></i> </a>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center m-3">
+                <span>Phone: <%= user.phone == null ? 'Not set' : user.phone %></span>
+                <a href="account/change/phone"> <i class="bi bi-caret-right"></i> </a>
+            </div>
+        </div>
+    </div>
+
+
+    <%- include('../../util/footer')%>
+
+</body>
+</html>

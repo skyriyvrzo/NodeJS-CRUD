@@ -17,6 +17,11 @@ app.use(session({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(router)
+app.use((err, req, res, next) => {
+    console.error("Errer Caused: ", err.message);
+    // console.error("Error Caused: ", err.stack)
+    res.status(500).redirect('/login');
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
