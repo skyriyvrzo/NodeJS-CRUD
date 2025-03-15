@@ -6,6 +6,7 @@ const MemberSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: false },
     password: { type: String, required: true },
+    role: { type: String, required: false, default: "member" },
 });
 
 MemberSchema.methods.comparePassword = async function (password) {
