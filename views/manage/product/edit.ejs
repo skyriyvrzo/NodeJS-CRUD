@@ -23,6 +23,11 @@
             </div>
 
             <div class="mb-3">
+                <label for="productAmount" class="form-label">Price</label>
+                <input type="number" class="form-control" id="productAmount" name="productAmount" value="<%= target.amount %>" placeholder="Amount..." min="1" required>
+            </div>
+
+            <div class="mb-3">
                 <label for="productCategory" class="form-label">Category</label>
                 <select class="form-select" id="productCategory" name="productCategory" required>
                     <% if(target.category !== null) { %>
@@ -45,10 +50,10 @@
 
             <div class="mb-3">
                 <label for="productDescription" class="form-label">Description</label>
-                <input type="text" class="form-control" id="productDescription" name="productDescription" value="<%= target.description %>" placeholder="Description..." required>
+                <textarea class="form-control" id="productDescription" name="productDescription" placeholder="Description..." required><%= target.description %></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 box-shadow-primary">Add Product</button>
+            <button type="submit" class="btn btn-primary w-100 box-shadow-primary">Update</button>
         </form>
     </div>
 

@@ -59,13 +59,13 @@
                 <form action="/search" method="GET" class="search-form">
                     <div class="row align-items-center">
                         <div class="col-md-4">
-                            <input type="text" class="form-control filter" name="tagetName" placeholder="Search  Products, Categories" min="0">
+                            <input type="text" class="form-control filter" name="target" placeholder="Search  Products, Categories" min="0" value="<%= filter.target%>">
                         </div>
                         <div class="col-md-2">
-                            <input type="number" class="form-control filter" name="min" placeholder="Min" min="0">
+                            <input type="number" class="form-control filter" name="min" placeholder="Min" min="0" value="<%= filter.min%>">
                         </div>
                         <div class="col-md-2">
-                            <input type="number" class="form-control filter" name="max" placeholder="Max" min="0">
+                            <input type="number" class="form-control filter" name="max" placeholder="Max" min="0" value="<%= filter.max%>">
                         </div>
                         <div class="col-md-3 text-center">
                             <button type="submit" class="btn btn-outline-warning w-100 search-btn box-shadow-warning">Search</button>

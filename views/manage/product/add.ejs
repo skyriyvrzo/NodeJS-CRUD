@@ -21,6 +21,11 @@
             </div>
 
             <div class="mb-3">
+                <label for="productAmount" class="form-label">Price</label>
+                <input type="number" class="form-control" id="productAmount" name="productAmount" placeholder="Amount..." min="1" required>
+            </div>
+
+            <div class="mb-3">
                 <label for="productCategory" class="form-label">Category</label>
                 <select class="form-select" id="productCategory" name="productCategory" required>
                     <option value="" disabled selected>Select Category...</option>
@@ -37,7 +42,8 @@
 
             <div class="mb-3">
                 <label for="productDescription" class="form-label">Description</label>
-                <input type="text" class="form-control" id="productDescription" name="productDescription" placeholder="Description..." required>
+                <textarea class="form-control" id="productDescription" name="productDescription" rows="2" placeholder="Description..." required></textarea>
+                <!--                <input type="text" class="form-control" id="productDescription" name="productDescription" placeholder="Description..." required>-->
             </div>
 
             <button type="submit" class="btn btn-primary w-100 box-shadow-primary">Add Product</button>

@@ -29,11 +29,53 @@ const upload = multer({
     storage: storage
 })
 
+let filter = {
+    target: "",
+    min: "",
+    max: "",
+}
+
 //========================== Main (Get) ==============================
 r.get('/', async (req, res) => {
     const categories = await Common.getCategories()
     const products = await Product.find().populate('category').exec()
-    res.render('index', {user: req.session.user, categories, products});
+    filter = {
+        target: "",
+        min: "",
+        max: "",
+    }
+    res.render('index', {user: req.session.user, categories, products, filter: filter});
+})
+r.get('/search', async (req, res) => {
+    try {
+        filter = {
+            target: req.query.target,
+            min: req.query.min,
+            max: req.query.max,
+        }
+
+        let query = {};
+
+        if (filter.target) {
+            query.name = { $eq: filter.target };
+        }
+        if (filter.min) {
+            query.price = { ...query.price, $gte: parseInt(filter.min) };
+        }
+        if (filter.max) {
+            query.price = { ...query.price, $lte: parseInt(filter.max) };
+        }
+
+        console.log(query.name)
+        console.log(query.price)
+        const products = await Product.find(query).populate('category').exec();
+        const categories = await Common.getCategories()
+
+        res.render("index", { products, user: req.session.user, categories, filter: filter});
+
+    } catch (error) {
+        res.redirect('/')
+    }
 })
 //=====================================================================
 
@@ -46,19 +88,19 @@ r.get('/chrome-dino', (req, res) => {
 
 
 //================== Register Login Logout Account (Get) ==============
-r.get('/login', (req, res) => {
+r.get('/login', async (req, res) => {
 
     if(req.session.login) return res.redirect(req.get('Referer') || '/')
-    res.render('user/login', {user: req.session.user});
+    res.render('user/login', {user: req.session.user, categories: await Common.getCategories()});
 })
 r.get("/logout", (req, res) => {
     req.session.destroy(() => {
         res.redirect("/login");
     });
 });
-r.get('/register', (req, res) => {
+r.get('/register', async (req, res) => {
     if(req.session.login) return res.redirect(req.get('Referer') || '/');
-    res.render('user/register', {user: req.session.user});
+    res.render('user/register', {user: req.session.user, categories: await Common.getCategories()});
 })
 r.get('/account', (req, res) => {
     res.render('user/account/account', {user: req.session.user})
@@ -100,7 +142,15 @@ r.get('/manage/category/delete/:id', async (req, res) => {
 r.get('/products/:target', async (req, res) => {
     const cateTarget = await Category.findOne({name: req.params.target})
     const products = await Product.find({category: cateTarget})
-    res.render('product/productsList', {products, user: req.session.user, categories: await Common.getCategories(), target: cateTarget.name})
+
+    filter = {
+        target: "",
+        min: "",
+        max: "",
+        category: ""
+    }
+
+    res.render('product/productsList', {products, user: req.session.user, categories: await Common.getCategories(), target: cateTarget.name, filter})
 })
 r.get('/manage/product', async (req, res) => {
     if (!Common.isLogin(req, res)) return;
@@ -119,9 +169,42 @@ r.get('/manage/product/delete/:id', async (req, res) => {
 
     try {
         await Product.findByIdAndDelete(req.params.id, {useFindAndModify: false}).exec();
-        res.redirect('/manage/product', {user: req.session.user});
+        res.redirect('/manage/product');
     } catch (error) {
         res.status(500).json({message: "Server Error", error: error.message});
+    }
+})
+r.get('/products/:category/search', async (req, res) => {
+    try {
+        filter = {
+            target: req.query.target,
+            min: req.query.min,
+            max: req.query.max,
+            category: req.query.category
+        }
+
+        let query = {};
+
+        if (filter.target) {
+            query.name = { $eq: filter.target };
+        }
+        if (filter.min) {
+            query.price = { ...query.price, $gte: parseInt(filter.min) };
+        }
+        if (filter.max) {
+            query.price = { ...query.price, $lte: parseInt(filter.max) };
+        }
+        query.category = await Category.findOne({name: filter.category});
+        console.log(query)
+
+        const products = await Product.find(query).populate('category').exec();
+        console.log(products)
+
+        res.render('product/productsList', {products, user: req.session.user, categories: await Common.getCategories(), target: filter.category, filter})
+
+
+    } catch (error) {
+        res.redirect('/')
     }
 })
 //=====================================================================
@@ -184,19 +267,17 @@ r.post('/update-profile', async (req, res) => {
         if(target && target.username === whatChange) return res.json({error: "Duplicated username"})
     }
 
-    if(type == 'email') {
+    if(type === 'email') {
         const target = await Member.findOne({email: whatChange})
         if(target && target.email === whatChange) return res.json({error: "Duplicated email"})
     }
 
-    if(type == 'password') {
+    if(type === 'password') {
         const newPass = req.body.newPassword
         const confirmNewPass = req.body.confirmNewPassword
 
         if(newPass !== confirmNewPass) return res.json({error: "Password does not match"})
-        const hashedPassword = await bcrypt.hash(newPass, 10)
-        whatChange = hashedPassword
-
+        whatChange = await bcrypt.hash(newPass, 10)
     }
 
     const data = {
@@ -239,15 +320,20 @@ r.post('/manage/category/edit', async (req, res) => {
     }
 })
 r.post('/manage/category/update', async (req, res) => {
-    console.log(req.body)
     try {
         const name = req.body.categoryName
         const id = req.body.id
+
+        const old = await Category.findOne({_id: id});
+        if(name === old.name) {
+            return res.redirect(`/manage/category`);
+        }
+
         const target = await Category.findOne({name})
         if(target && name === target.name) return res.json({error: "Duplicated category name"})
 
         await Category.findByIdAndUpdate(id, {name: name}, {useFindAndModify: false}).exec();
-        await res.redirect('/manage/category');
+        res.redirect('/manage/category');
 
     } catch (error) {
         res.status(500).json({message: "Server Error", error: error.message});
@@ -258,7 +344,7 @@ r.post('/manage/category/update', async (req, res) => {
 
 //============================ Product (Post) =========================
 r.post('/manage/product/add', upload.single('productImage'), async (req, res) => {
-    const { productName, productPrice, productCategory, productDescription } = req.body;
+    const { productName, productPrice, productAmount, productCategory, productDescription } = req.body;
 
     if(await Product.findOne({productName})) {
         return res.json({error: "Duplicated product name"})
@@ -267,6 +353,7 @@ r.post('/manage/product/add', upload.single('productImage'), async (req, res) =>
     const newProduct = new Product({
         name: productName,
         price: productPrice,
+        amount: productAmount,
         category: await Category.findOne({name: productCategory}),
         image: req.file.filename,
         description: productDescription
@@ -292,6 +379,7 @@ r.post('/manage/product/update', upload.single('productImage'), async (req, res)
         const data = {
             name: req.body.productName,
             price: req.body.productPrice,
+            amount: req.body.productAmount,
             category: await Category.findOne({name: req.body.productCategory}),
             description: req.body.productDescription
         };
